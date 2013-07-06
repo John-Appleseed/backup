@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 # Cookbook Name:: backup
-# Recipe:: default
+# Recipe:: rsync
 #
 # Copyright 2012, Scott M. Likens
 # Copyright 2012, AJ Christensen
