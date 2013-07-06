@@ -21,7 +21,8 @@ action :backup do
                 :description => new_resource.description,
                 :backup_type => new_resource.backup_type,
                 :database_type => new_resource.database_type,
-                :store_with => new_resource.store_with
+                :store_with => new_resource.store_with,
+                :sync_with => new_resource.sync_with
               })
     notifies :create, resources(:cron => "scheduled backup: " + new_resource.name), :immediately
   end
