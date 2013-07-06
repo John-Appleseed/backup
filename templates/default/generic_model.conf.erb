@@ -36,7 +36,21 @@ split_into_chunks_of <%= @split_into_chunks_of %>
 		else
 			engine_command="rsync"
 		end
+
+		
+		# Include the exclude arguments from @options["exclude"] to additional_rsync_options
+		if @options["exclude"] 
+			@options["exclude"].each do |exclude|
+			@sync_with["settings"]["rsync.additional_rsync_options"] += ["--exclude='"+ exclude+"'"]
+			end
+		end
+
 	%>
+
+
+
+
+
 
 	sync_with <%= @sync_with["engine"] %> do |<%= engine_command %>|
 
@@ -44,6 +58,13 @@ split_into_chunks_of <%= @split_into_chunks_of %>
 	<% if @sync_with["settings"]["rsync.mode"] %>
 		rsync.mode = <%= @sync_with["settings"]["rsync.mode"] %>
 		<% @sync_with["settings"].delete("rsync.mode") %>
+	<% end %>
+
+
+	# Avoid quotes, for rsync.additional_rsync_options is an array
+	<% if @sync_with["settings"]["rsync.additional_rsync_options"] %>
+		rsync.additional_rsync_options = <%= @sync_with["settings"]["rsync.additional_rsync_options"] %>
+		<% @sync_with["settings"].delete("rsync.additional_rsync_options") %>
 	<% end %>
 
 	<% @sync_with["settings"].each_pair do |k,v| %>
