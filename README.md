@@ -178,7 +178,57 @@ There are infinite ways you can implement this cookbook into your environment in
     mailto "sample@example.com"
     action :backup
   end
-``` 
+```
+
+* Backing up files from remote node with rsync
+  - RSync::Push, this will be a path on the remote. rsync.path => "/Backups"
+  - RSync::Pull, this will be a local path. rsync.path => "/home/user/Documents"
+  - Change variables below to backup your own files 
+     - ```rsync.host```
+     - ```rsync.ssh_user```
+     - ```rsync.rsync_user```
+     - ```rsync.path```
+     - ```options({"add" => ["/home/user/Documents"]})```
+
+
+```
+ backup_install node.name
+  backup_generate_config node.name
+
+  backup_generate_model "Downloads" do
+  description "Backup of Downloads"
+	backup_type "rsync"
+	sync_with({
+	  "engine" => "RSync::Pull",
+	  #"engine" => "RSync::Push",
+	  "settings" => {
+		"rsync.mode" => ":ssh",
+		"rsync.host" => "pullremotedata.com",
+		"rsync.port" => 22,
+		"rsync.ssh_user" => "change_to_your_user",
+		#"rsync.additional_ssh_options" => "-i '/path/to/id_rsa'",
+		"rsync.additional_rsync_options" => ["-rlptD --no-g --no-o --hard-links --one-file-system"], # do not preserve owner or group
+		#"rsync.additional_rsync_options" => "--archive --hard-links --one-file-system", # preserve owner and group
+		"rsync.mirror" => "true", 
+		"rsync.compress" => "true",
+		"rsync.rsync_user" => "your_backup_user",
+		"rsync.path" => "/Backups/" 
+	}
+	})
+	options({
+	  "add" => ["~/Downloads"],
+	  "exclude" => [
+		  "*Library/Caches/",
+		  "*.Trash/",
+		  "*.DocumentRevisions-V100/",
+		  "/tmp"
+	],
+	  #"tar_options" => "-p" 
+	})
+	mailto "sample@example.com"
+	action :backup
+  end
+```
 
 * There is no technical reason you cannot load more of this code in via an `role` or an `data bag` instead.
 
