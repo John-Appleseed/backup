@@ -22,6 +22,30 @@ split_into_chunks_of <%= @split_into_chunks_of %>
     <%= k %> = "<%= v %>"
     <% end %>
   end
+<% elsif var == “20″ %>
+<%  
+
+
+case @sync_with["engine"]
+when "RSync::Push"
+  engine_command="rsync"
+when "RSync::Pull"
+  engine_command="rsync"
+when "Cloud::CloudFiles"
+  engine_command="cf"
+when "Cloud::S3"
+  engine_command="s3"
+else
+  engine_command="rsync"
+end
+
+%>
+
+sync_with <%= @sync_with["engine"] %> do |<%= engine_command %>|
+  <% @store_with["settings"].each_pair do |k,v| %>
+    <%= k %> = "<%= v %>"
+    <% end %>
+  end
 <% end %>
   ##
   # Gzip [Compressor]
