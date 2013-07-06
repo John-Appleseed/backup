@@ -22,9 +22,8 @@ split_into_chunks_of <%= @split_into_chunks_of %>
     <%= k %> = "<%= v %>"
     <% end %>
   end
-<% elsif var == “20″ %>
+<% elsif @sync_with %>
 <%  
-
 
 case @sync_with["engine"]
 when "RSync::Push"
@@ -42,7 +41,7 @@ end
 %>
 
 sync_with <%= @sync_with["engine"] %> do |<%= engine_command %>|
-  <% @store_with["settings"].each_pair do |k,v| %>
+  <% @sync_with["settings"].each_pair do |k,v| %>
     <%= k %> = "<%= v %>"
     <% end %>
   end
