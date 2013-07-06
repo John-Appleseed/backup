@@ -18,58 +18,74 @@ split_into_chunks_of <%= @split_into_chunks_of %>
 
 <% if @store_with %>
   store_with <%= @store_with["engine"] %> do |<%= @store_with["engine"].downcase %>|
-  <% @store_with["settings"].each_pair do |k,v| %>
-    <%= k %> = "<%= v %>"
-    <% end %>
-  end
+	<% @store_with["settings"].each_pair do |k,v| %>
+		<%= k %> = "<%= v %>"
+	<% end %>
+	end
 <% elsif @sync_with %>
-<%  
+	<%  
+		case @sync_with["engine"]
+		when "RSync::Push"
+			engine_command="rsync"
+		when "RSync::Pull"
+			engine_command="rsync"
+		when "Cloud::CloudFiles"
+			engine_command="cf"
+		when "Cloud::S3"
+			engine_command="s3"
+		else
+			engine_command="rsync"
+		end
+	%>
 
-case @sync_with["engine"]
-when "RSync::Push"
-  engine_command="rsync"
-when "RSync::Pull"
-  engine_command="rsync"
-when "Cloud::CloudFiles"
-  engine_command="cf"
-when "Cloud::S3"
-  engine_command="s3"
-else
-  engine_command="rsync"
-end
+	sync_with <%= @sync_with["engine"] %> do |<%= engine_command %>|
 
-%>
+	# rsync.mode does not use quotes. Options are :ssh, :ssh_daemon, :rsync_daemon
+	<% if @sync_with["settings"]["rsync.mode"] %>
+		rsync.mode = <%= @sync_with["settings"]["rsync.mode"] %>
+		<% @sync_with["settings"].delete("rsync.mode") %>
+	<% end %>
 
-sync_with <%= @sync_with["engine"] %> do |<%= engine_command %>|
-  <% @sync_with["settings"].each_pair do |k,v| %>
-    <%= k %> = "<%= v %>"
-    <% end %>
-  end
+	<% @sync_with["settings"].each_pair do |k,v| %>
+		<%= k %> = "<%= v %>"
+	<% end %>
+
+
+	# RSync::Push - path on the remote. Local data > Remote
+	# RSync::Pull - will be a local path. Remote data > local
+	rsync.directories do |directory|
+	<% @options["add"].each do |v| %>
+		directory.add '<%= v %>'
+	<% end %>
+	end
+
+	end
 <% end %>
-  ##
-  # Gzip [Compressor]
-  #
-  compress_with Gzip
-  <% if @backup_type == "database" %>
-  database <%= @database_type %> do |db|
-  <% @options.each_pair do |k,v| %>
-    <%= k %> = <%= v %>
-    <% end %>
-  end
-  <% end %>
-  <% if @backup_type == "archive" %>
-  archive :<%= @name %> do |archive|
-  <% @options["add"].each do |v| %>
-    archive.add '<%= v %>'
-  <% end %>
-  <% if @options["exclude"] %>
-    <% @options["exclude"].each do |v| %>
-    archive.exclude '<%= v %>'
-    <% end %>
-  <% end %>
-    <% if @options["tar_options"] %>
-    archive.tar_options '<%= @options["tar_options"] %>'
-    <% end %>
-  end
+##
+# Gzip [Compressor]
+#
+compress_with Gzip
+<% if @backup_type == "database" %>
+	database <%= @database_type %> do |db|
+	<% @options.each_pair do |k,v| %>
+		<%= k %> = <%= v %>
+	<% end %>
+	end
+<% end %>
+<% if @backup_type == "archive" %>
+	archive :<%= @name %> do |archive|
+	<% @options["add"].each do |v| %>
+		archive.add '<%= v %>'
+	<% end %>
+	<% if @options["exclude"] %>
+		<% @options["exclude"].each do |v| %>
+			archive.exclude '<%= v %>'
+		<% end %>
+	<% end %>
+	<% if @options["tar_options"] %>
+		archive.tar_options '<%= @options["tar_options"] %>'
+	<% end %>
+	end
+<% elsif @backup_type == "rsync" %>
 <% end %>
 end
