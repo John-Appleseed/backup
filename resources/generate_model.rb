@@ -14,6 +14,7 @@ attribute :day, :kind_of => String, :default => "*"
 attribute :month, :kind_of => String, :default => "*"
 attribute :weekday, :kind_of => String, :default => "*"
 attribute :mailto, :kind_of => String, :default => nil
+attribute :path, :kind_of => String, :default => "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 
 def initialize(*args)
   super
