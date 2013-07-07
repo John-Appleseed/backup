@@ -191,7 +191,9 @@ There are infinite ways you can implement this cookbook into your environment in
      - ```options({"add" => ["/home/user/Documents"]})```
 
 
-```
+```ruby
+#recipe/default.rb
+
  backup_install node.name
   backup_generate_config node.name
 
