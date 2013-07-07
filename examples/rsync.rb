@@ -47,7 +47,7 @@
 	  "add" => ["~/Downloads"],
 	  "exclude" => [
 		  "*Library/Caches/",
-		  "*.Trash/",
+		  "*.Trash*",
 		  "*.DocumentRevisions-V100/",
 		  "/tmp"
 	],
