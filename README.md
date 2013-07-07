@@ -221,7 +221,7 @@ There are infinite ways you can implement this cookbook into your environment in
 	  "add" => ["~/Downloads"],
 	  "exclude" => [
 		  "*Library/Caches/",
-		  "*.Trash/",
+		  "*.Trash*",
 		  "*.DocumentRevisions-V100/",
 		  "/tmp"
 	],
