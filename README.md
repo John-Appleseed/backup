@@ -132,7 +132,7 @@ Actions:
   <tr>
     <td><tt>backup_type</tt></td>
     <td>String</td>
-    <td>What kind of backup? <a href="https://github.com/meskyanichi/backup/wiki/Archives">archive</a> or <a href="https://github.com/meskyanichi/backup/wiki/Databases">database</a></td>
+    <td>What kind of backup? <a href="http://meskyanichi.github.io/backup/v4/archives">archive</a> or <a href="http://meskyanichi.github.io/backup/v4/databases">database</a> or <a href="http://meskyanichi.github.io/backup/v4/syncers">rsync</a></td>
     <td><tt>database</tt></td>
   </tr>
   <tr>
@@ -144,9 +144,15 @@ Actions:
   <tr>
     <td><tt>store_with</tt></td>
     <td>Hash</td>
-    <td>Specify what  <a href="https://github.com/meskyanichi/backup/wiki/Storages">storage</a> engines you wish enable.</td>
+    <td>Specify what  <a href="http://meskyanichi.github.io/backup/v4/storages">storage</a> engines you wish enable.</td>
     <td></td>
-    </tr>
+  </tr>
+  <tr>
+    <td><tt>sync_with</tt></td>
+    <td>Hash</td>
+    <td>Specify what <a href="http://meskyanichi.github.io/backup/v4/syncers">syncer</a> engines you wish enable.</td>
+    <td></td>
+  </tr>
   <tr>
     <td><tt>hour</tt></td>
     <td>String</td>
@@ -199,6 +205,18 @@ Actions:
     <td><tt>cron_log</tt></td>
     <td>String</td>
     <td>Log file for redirecting the cron job output</td>
+    <td></td>
+  </tr>
+   <tr>
+    <td><tt>before_hook</tt></td>
+    <td>String</td>
+    <td>Before hook runs ruby code just after 'Backup' logs that the backup has started, before any procedures are performed</td>
+    <td></td>
+  </tr>
+   <tr>
+    <td><tt>after_hook</tt></td>
+    <td>String</td>
+    <td>After hook runs ruby code just before any Notifiers and is guaranteed to run whether or not the backup process was successful or not</td>
     <td></td>
   </tr>
 </table>

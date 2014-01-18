@@ -40,9 +40,7 @@ Backup::Model.new(:<%= @name %>, '<%= @description %>') do
 <% elsif @sync_with %>
 	<%  
 		case @sync_with["engine"]
-		when "RSync::Push"
-			engine_command="rsync"
-		when "RSync::Pull"
+		when "RSync::Push", "RSync::Pull", "RSync::Local"
 			engine_command="rsync"
 		when "Cloud::CloudFiles"
 			engine_command="cf"
@@ -89,6 +87,7 @@ Backup::Model.new(:<%= @name %>, '<%= @description %>') do
 
 	# RSync::Push - path on the remote. Local data > Remote
 	# RSync::Pull - will be a local path. Remote data > local
+    # RSync::Local - all operations are local to the machine
 	rsync.directories do |directory|
 	<% @options["add"].each do |v| %>
 		directory.add '<%= v %>'
