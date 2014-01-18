@@ -163,7 +163,7 @@ Actions:
     <td><tt>minute</tt></td>
     <td>String</td>
     <td>How many minutes past the hour to run the backup</td>
-    <td><tt>*</tt></td>
+    <td><tt>0</tt></td>
   </tr>
   <tr>
     <td><tt>day</tt></td>
