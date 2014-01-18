@@ -8,12 +8,14 @@ action :install do
 
 libxslt1 = value_for_platform(
                              ["centos", "redhat", "suse", "fedora" ] => { "default" => "libxslt-devel" },
-                             ["debian", "ubuntu" ] => { "default" => "libxslt1-dev" }
+                             ["debian", "ubuntu" ] => { "default" => "libxslt1-dev" },
+                             ["gentoo"] => { "default" => "libxslt" }
                              )
  
 libxml2 = value_for_platform(
                              ["centos", "redhat", "suse", "fedora" ] => { "default" => "libxml2-devel" },
-                             ["debian", "ubuntu" ] => { "default" => "libxml2-dev" }
+                             ["debian", "ubuntu" ] => { "default" => "libxml2-dev" },
+                             ["gentoo"] => { "default" => "libxml2" }
                              )
   package libxml2 
   package libxslt1
