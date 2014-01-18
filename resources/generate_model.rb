@@ -9,15 +9,16 @@ attribute :backup_type, :kind_of => String, :default => "database"
 attribute :database_type, :kind_of => String, :default => nil
 attribute :store_with, :kind_of => Hash
 attribute :sync_with, :kind_of => Hash
+attribute :before_hook, :kind_of => String, :default => nil
+attribute :after_hook, :kind_of => String, :default => nil
 attribute :hour, :kind_of => String, :default => "1"
 attribute :minute, :kind_of => String, :default => "0"
 attribute :day, :kind_of => String, :default => "*"
 attribute :month, :kind_of => String, :default => "*"
 attribute :weekday, :kind_of => String, :default => "*"
 attribute :mailto, :kind_of => String, :default => nil
-attribute :path, :kind_of => String, :default => "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 attribute :tmp_path, :kind_of => String, :default => nil
-attribute :cron_path, :kind_of => String, :default => nil
+attribute :cron_path, :kind_of => String, :default => "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 attribute :cron_log, :kind_of => String, :default => nil
 
 def initialize(*args)

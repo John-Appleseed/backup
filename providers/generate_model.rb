@@ -18,7 +18,9 @@ action :backup do
                 :backup_type => new_resource.backup_type,
                 :database_type => new_resource.database_type,
                 :store_with => new_resource.store_with,
-                :sync_with => new_resource.sync_with
+                :sync_with => new_resource.sync_with,
+                :before_hook => new_resource.before_hook,
+                :after_hook => new_resource.after_hook
               })
   end
   cron "scheduled backup: " + new_resource.name do
@@ -33,7 +35,7 @@ action :backup do
     elsif new_resource.gem_bin_dir
       cmd = "#{new_resource.gem_bin_dir}/backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
     else
-      cmd = "#{node['languages']['ruby']['bin_dir']}/backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
+      cmd = "backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
     end
     command cmd + ( new_resource.tmp_path ? " --tmp-path #{new_resource.tmp_path}" : "" ) +  ( new_resource.cron_log ? " >> #{new_resource.cron_log} 2>&1" : "" )
     if new_resource.cron_path
