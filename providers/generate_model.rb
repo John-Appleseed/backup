@@ -1,15 +1,10 @@
+def whyrun_supported?
+  true
+end
+
+use_inline_resources if defined?(use_inline_resources)
+
 action :backup do
-  cron "scheduled backup: " + new_resource.name do
-    hour new_resource.hour || "1" 
-    minute new_resource.minute || "*"
-    day new_resource.day || "*"
-    month new_resource.month || "*"
-    weekday new_resource.weekday || "*"
-    mailto new_resource.mailto 
-	path new_resource.path 
-    command "/bin/bash -l -c 'backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb'"
-    action :nothing
-  end
   template "#{new_resource.base_dir}/models/#{new_resource.name}.rb" do
     mode 0600
     source new_resource.options["source"] || "generic_model.conf.erb"
@@ -25,16 +20,33 @@ action :backup do
                 :store_with => new_resource.store_with,
                 :sync_with => new_resource.sync_with
               })
-    notifies :create, resources(:cron => "scheduled backup: " + new_resource.name), :immediately
   end
-  new_resource.updated_by_last_action(true)
+  cron "scheduled backup: " + new_resource.name do
+    hour new_resource.hour || "1" 
+    minute new_resource.minute || "*"
+    day new_resource.day || "*"
+    month new_resource.month || "*"
+    weekday new_resource.weekday || "*"
+    mailto new_resource.mailto
+    if node['languages']['ruby'].empty?
+      cmd = "/opt/chef/embedded/bin/backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
+    elsif new_resource.gem_bin_dir
+      cmd = "#{new_resource.gem_bin_dir}/backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
+    else
+      cmd = "#{node['languages']['ruby']['bin_dir']}/backup perform -t #{new_resource.name} -c #{new_resource.base_dir}/config.rb"
+    end
+    command cmd + ( new_resource.tmp_path ? " --tmp-path #{new_resource.tmp_path}" : "" ) +  ( new_resource.cron_log ? " >> #{new_resource.cron_log} 2>&1" : "" )
+    if new_resource.cron_path
+      path new_resource.cron_path
+    end
+    action :create
+  end
 end
 
 action :disable do
   cron "scheduled backup: " + current_resource.name do
     action :remove
   end
-  new_resource.updated_by_last_action(true)
 end
 
 action :remove do
@@ -44,5 +56,4 @@ action :remove do
   cron "scheduled backup: " + current_resource.name do
     action :remove
   end
-  new_resource.updated_by_last_action(true)
 end
